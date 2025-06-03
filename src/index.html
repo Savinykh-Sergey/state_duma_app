@@ -1,39 +1,375 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="stylesheet" href="styles.css" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tauri App</title>
-    <script type="module" src="/main.js" defer></script>
-  </head>
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Управление Городской Думой</title>
+  <script src="tailwind.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-gray-100 font-sans">
+<div class="flex flex-col h-screen">
+  <!-- Header -->
+  <header class="bg-blue-600 text-white p-4">
+    <h1 class="text-2xl font-bold">Управление Городской Думой</h1>
+  </header>
 
-  <body>
-    <main class="container">
-      <h1>Welcome to Tauri</h1>
+  <!-- Navigation and Content -->
+  <div class="flex flex-1">
+    <!-- Navigation Menu -->
+    <nav class="bg-gray-800 text-white w-64 p-4">
+      <ul id="mainMenu" class="space-y-2">
+        <li><button onclick="showSubMenu('members')" class="w-full text-left p-2 hover:bg-gray-700 rounded">Члены думы</button></li>
+        <li><button onclick="showSubMenu('commissions')" class="w-full text-left p-2 hover:bg-gray-700 rounded">Комиссии</button></li>
+        <li><button onclick="showSubMenu('reports')" class="w-full text-left p-2 hover:bg-gray-700 rounded">Отчеты</button></li>
+      </ul>
+      <ul id="membersSubMenu" class="space-y-2 hidden">
+        <li><button onclick="showSection('membersList', renderMembers)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Члены думы</button></li>
+        <li><button onclick="showSection('organizersList', renderOrganizers)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Организаторы</button></li>
+        <li><button onclick="showSection('chairmenList', renderChairmen)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Председатели</button></li>
+        <li><button onclick="backToMainMenu()" class="w-full text-left p-2 hover:bg-gray-700 rounded bg-gray-600">Назад</button></li>
+      </ul>
+      <ul id="commissionsSubMenu" class="space-y-2 hidden">
+        <li><button onclick="showSection('commissionsList', renderCommissions)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Комиссии</button></li>
+        <li><button onclick="showSection('meetingsList', renderMeetings)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Заседания</button></li>
+        <li><button onclick="backToMainMenu()" class="w-full text-left p-2 hover:bg-gray-700 rounded bg-gray-600">Назад</button></li>
+      </ul>
+      <ul id="reportsSubMenu" class="space-y-2 hidden">
+        <li><button onclick="showSection('reportExperience', renderReportExperience)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Стаж для председателя</button></li>
+        <li><button onclick="showSection('reportCommission')" class="w-full text-left p-2 hover:bg-gray-700 rounded">Состав комиссии</button></li>
+        <li><button onclick="showSection('reportMeetings')" class="w-full text-left p-2 hover:bg-gray-700 rounded">Заседания по месяцам</button></li>
+        <li><button onclick="showSection('reportPensioners', renderReportRetired)" class="w-full text-left p-2 hover:bg-gray-700 rounded">Пенсионеры</button></li>
+        <li><button onclick="backToMainMenu()" class="w-full text-left p-2 hover:bg-gray-700 rounded bg-gray-600">Назад</button></li>
+      </ul>
+    </nav>
 
-      <div class="row">
-        <a href="https://tauri.app" target="_blank">
-          <img src="/assets/tauri.svg" class="logo tauri" alt="Tauri logo" />
-        </a>
-        <a
-          href="https://developer.mozilla.org/en-US/docs/Web/JavaScript"
-          target="_blank"
-        >
-          <img
-            src="/assets/javascript.svg"
-            class="logo vanilla"
-            alt="JavaScript logo"
-          />
-        </a>
+    <!-- Content Area -->
+    <main class="flex-1 p-6">
+      <!-- Members List Section -->
+      <section id="membersList" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Члены думы</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Телефон</th>
+            <th class="p-2">Дата рождения</th>
+            <th class="p-2">Стаж</th>
+            <th class="p-2">Действия</th>
+          </tr>
+          </thead>
+          <tbody id="membersTable"></tbody>
+        </table>
+        <button onclick="showAddMemberForm()" class="mt-4 bg-green-500 text-white p-2 rounded">Добавить</button>
+      </section>
+
+      <!-- Organizers List Section -->
+      <section id="organizersList" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Организаторы</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Телефон</th>
+            <th class="p-2">Дата рождения</th>
+            <th class="p-2">Действия</th>
+          </tr>
+          </thead>
+          <tbody id="organizersTable"></tbody>
+        </table>
+        <button onclick="showAddOrganizerForm()" class="mt-4 bg-green-500 text-white p-2 rounded">Добавить</button>
+      </section>
+
+      <!-- Chairmen List Section -->
+      <section id="chairmenList" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Председатели</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Телефон</th>
+            <th class="p-2">Дата рождения</th>
+            <th class="p-2">Стаж</th>
+            <th class="p-2">Действия</th>
+          </tr>
+          </thead>
+          <tbody id="chairmenTable"></tbody>
+        </table>
+      </section>
+
+      <!-- Commissions List Section -->
+      <section id="commissionsList" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Комиссии</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Направление</th>
+            <th class="p-2">Председатель</th>
+            <th class="p-2">Организатор</th>
+            <th class="p-2">Действия</th>
+          </tr>
+          </thead>
+          <tbody id="commissionsTable"></tbody>
+        </table>
+        <button onclick="showAddCommissionForm()" class="mt-4 bg-green-500 text-white p-2 rounded">Добавить</button>
+      </section>
+
+      <!-- Meetings List Section -->
+      <section id="meetingsList" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Заседания</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Дата</th>
+            <th class="p-2">Продолжительность</th>
+            <th class="p-2">Комиссия</th>
+            <th class="p-2">Действия</th>
+          </tr>
+          </thead>
+          <tbody id="meetingsTable"></tbody>
+        </table>
+        <button onclick="showAddMeetingForm()" class="mt-4 bg-green-500 text-white p-2 rounded">Добавить</button>
+      </section>
+
+      <!-- Report: Experience for Chairman -->
+      <section id="reportExperience" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Количество членов думы, чей стаж более 7 лет</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Стаж</th>
+          </tr>
+          </thead>
+          <tbody id="reportExperienceTable"></tbody>
+        </table>
+      </section>
+
+      <!-- Report: Commission Composition -->
+      <section id="reportCommission" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Состав комиссии по направлению</h2>
+        <div class="mb-4">
+          <label class="block mb-2">Направление:</label>
+          <select id="reportCommissionDirection" class="border p-2 rounded">
+            <option value="social">Социальное</option>
+            <option value="ecological">Экологическое</option>
+          </select>
+          <button onclick="generateCommissionReport()" class="mt-4 bg-blue-500 text-white p-2 rounded">Сгенерировать</button>
+        </div>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Роль</th>
+          </tr>
+          </thead>
+          <tbody id="reportCommissionTable"></tbody>
+        </table>
+      </section>
+
+      <!-- Report: Pensioners -->
+      <section id="reportPensioners" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Члены думы пенсионного возраста</h2>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Имя</th>
+            <th class="p-2">Дата рождения</th>
+          </tr>
+          </thead>
+          <tbody id="reportPensionersTable"></tbody>
+        </table>
+      </section>
+
+      <!-- Report: Meetings per Month -->
+      <section id="reportMeetings" class="section hidden">
+        <h2 class="text-xl font-semibold mb-4">Количество заседаний по месяцам</h2>
+        <div class="mb-4">
+          <label class="block mb-2">Год:</label>
+          <input type="number" id="reportMeetingsYear" class="border p-2 rounded" value="2025">
+          <button onclick="generateMeetingsReport()" class="mt-4 bg-blue-500 text-white p-2 rounded">Сгенерировать</button>
+        </div>
+        <table class="w-full text-left border-collapse">
+          <thead>
+          <tr class="bg-gray-200">
+            <th class="p-2">Месяц</th>
+            <th class="p-2">Количество заседаний</th>
+          </tr>
+          </thead>
+          <tbody id="reportMeetingsTable"></tbody>
+        </table>
+      </section>
+
+      <!-- Add/Edit Member Form Modal -->
+      <div id="memberModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="memberFormTitle" class="text-xl font-semibold mb-4">Добавить члена думы</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block">Имя:</label>
+              <input type="text" id="memberName" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Телефон:</label>
+              <input type="text" id="memberPhone" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Дата рождения:</label>
+              <input type="date" id="memberBirthDate" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Опыт (годы):</label>
+              <input type="number" id="memberExperience" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Председатель:</label>
+              <input type="checkbox" id="memberIsChairman">
+            </div>
+            <div>
+              <label class="block">Комиссия:</label>
+              <select id="memberCommission" class="w-full border p-2 rounded">
+                <option value="">Выберите комиссию</option>
+              </select>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="saveMember()" class="bg-green-500 text-white p-2 rounded">Сохранить</button>
+              <button onclick="closeModal('memberModal')" class="bg-gray-500 text-white p-2 rounded">Отмена</button>
+            </div>
+          </div>
+        </div>
       </div>
-      <p>Click on the Tauri logo to learn more about the framework</p>
 
-      <form class="row" id="greet-form">
-        <input id="greet-input" placeholder="Enter a name..." />
-        <button type="submit">Greet</button>
-      </form>
-      <p id="greet-msg"></p>
+      <!-- Add/Edit Chairmen Form Modal -->
+      <div id="chairmanModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="chairmanFormTitle" class="text-xl font-semibold mb-4">Добавить члена думы</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block">Имя:</label>
+              <input type="text" id="chairmanName" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Телефон:</label>
+              <input type="text" id="chairmanPhone" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Дата рождения:</label>
+              <input type="date" id="chairmanBirthDate" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Стаж (годы):</label>
+              <input type="number" id="chairmanExperience" class="w-full border p-2 rounded">
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="saveMember()" class="bg-green-500 text-white p-2 rounded">Сохранить</button>
+              <button onclick="closeModal('chairmanModal')" class="bg-gray-500 text-white p-2 rounded">Отмена</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add/Edit Organizer Form Modal -->
+      <div id="organizerModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="organizerFormTitle" class="text-xl font-semibold mb-4">Добавить организатора</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block">Имя:</label>
+              <input type="text" id="organizerName" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Телефон:</label>
+              <input type="text" id="organizerPhone" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Дата рождения:</label>
+              <input type="date" id="organizerBirthDate" class="w-full border p-2 rounded">
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="saveOrganizer()" class="bg-green-500 text-white p-2 rounded">Сохранить</button>
+              <button onclick="closeModal('organizerModal')" class="bg-gray-500 text-white p-2 rounded">Отмена</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add/Edit Commission Form Modal -->
+      <div id="commissionModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="commissionFormTitle" class="text-xl font-semibold mb-4">Добавить комиссию</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block">Направление:</label>
+              <select id="commissionDirectionInput" class="w-full border p-2 rounded">
+                <option value="social">Социальное</option>
+                <option value="ecological">Экологическое</option>
+              </select>
+            </div>
+            <div>
+              <label class="block">Председатель:</label>
+              <select id="commissionChairman" class="w-full border p-2 rounded"></select>
+            </div>
+            <div>
+              <label class="block">Организатор:</label>
+              <select id="commissionOrganizer" class="w-full border p-2 rounded"></select>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="saveCommission()" class="bg-green-500 text-white p-2 rounded">Сохранить</button>
+              <button onclick="closeModal('commissionModal')" class="bg-gray-500 text-white p-2 rounded">Отмена</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add/Edit Meeting Form Modal -->
+      <div id="meetingModal" class="modal hidden">
+        <div class="modal-content">
+          <h3 id="meetingFormTitle" class="text-xl font-semibold mb-4">Добавить заседание</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="block">Дата:</label>
+              <input type="date" id="meetingDate" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Продолжительность (мин):</label>
+              <input type="number" id="meetingDuration" class="w-full border p-2 rounded">
+            </div>
+            <div>
+              <label class="block">Комиссия:</label>
+              <select id="meetingCommission" class="w-full border p-2 rounded"></select>
+            </div>
+            <div class="flex space-x-2">
+              <button onclick="saveMeeting()" class="bg-green-500 text-white p-2 rounded">Сохранить</button>
+              <button onclick="closeModal('meetingModal')" class="bg-gray-500 text-white p-2 rounded">Отмена</button>
+            </div>
+          </div>
+        </div>
+      </div>
     </main>
-  </body>
+  </div>
+</div>
+
+<script type="text/javascript" src="lib/phone_normalizer.js"></script>
+<script type="text/javascript" src="main.js"></script>
+<script type="text/javascript" src="screens/navigation.js"></script>
+<script type="text/javascript" src="screens/members.js"></script>
+<script type="text/javascript" src="screens/organizers.js"></script>
+<script type="text/javascript" src="screens/chairmen.js"></script>
+<script type="text/javascript" src="screens/commissions.js"></script>
+<script type="text/javascript" src="screens/meetings.js"></script>
+<script type="text/javascript" src="screens/reports/experiencedMembers.js"></script>
+<script type="text/javascript" src="screens/reports/retiredMembers.js"></script>
+<script type="text/javascript" src="screens/reports/membersByDirection.js"></script>
+<script type="text/javascript" src="screens/reports/meetingsByYear.js"></script>
+
+<script type="text/javascript">
+  document.addEventListener('DOMContentLoaded', () => {
+    const modals = ['memberModal', 'chairmanModal', 'organizerModal', 'commissionModal', 'meetingModal', 'reportExperience', 'reportPensioners'];
+    modals.forEach(modalId => {
+      document.getElementById(modalId).classList.add('hidden');
+    });
+  });
+</script>
+</body>
 </html>
