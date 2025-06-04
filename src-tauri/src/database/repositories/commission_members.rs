@@ -1,6 +1,7 @@
 use uuid::Uuid;
-use crate::database::entity::commission_members::CommissionMembers;
+
 use crate::database::init::get_pool;
+use crate::database::entity::commission_members::CommissionMembers;
 use crate::types::ResultWithStringError;
 
 pub async fn add_commission_member(member_id: Uuid, commission_id: Uuid) -> ResultWithStringError<()> {

@@ -128,7 +128,6 @@ async function saveMember() {
         return;
     }
 
-    let member = await invoke('fetch_member_ui', { query: fullName });
 
     try {
         if (!currentMemberId) {
@@ -140,6 +139,8 @@ async function saveMember() {
                 isChairman
             });
         } else {
+            let member = await invoke('fetch_member_ui', { query: fullName });
+
             await invoke('execute_edit_member_ui', {
                 id: member.id,
                 fullName,
@@ -149,6 +150,8 @@ async function saveMember() {
                 isChairman
             });
         }
+
+        let member = await invoke('fetch_member_ui', { query: fullName });
 
         if (commissionId) {
             let commissionMember = null;

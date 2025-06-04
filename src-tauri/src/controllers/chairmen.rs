@@ -1,12 +1,16 @@
 use uuid::Uuid;
+
 use crate::database::entity::members::Members;
 use crate::database::repositories::chairmen::{delete_chairmen, get_chairmen};
 
 #[tauri::command(async)]
-pub async fn fetch_chairmen_ui() -> Result<Vec<Members>, String>{
+pub async fn fetch_chairmen_ui() -> Result<Vec<Members>, String> {
     match get_chairmen().await {
         Ok(members) => Ok(members),
-        Err(reason) => Err(format!("Возникла ошибка при получении членов гос. думы: {}", reason))
+        Err(reason) => Err(format!(
+            "Возникла ошибка при получении членов гос. думы: {}",
+            reason
+        )),
     }
 }
 

@@ -1,9 +1,10 @@
-use crate::database::dto::members::{ExperienceReport, RetiredReport};
-use crate::database::entity::members::Members;
-use crate::database::init::get_pool;
-use crate::types::ResultWithStringError;
 use chrono::{NaiveDate, Utc};
 use uuid::Uuid;
+
+use crate::database::init::get_pool;
+use crate::database::entity::members::Members;
+use crate::database::dto::members::{ExperienceReport, RetiredReport};
+use crate::types::ResultWithStringError;
 
 pub async fn get_members() -> ResultWithStringError<Vec<Members>> {
     let conn = get_pool().await;

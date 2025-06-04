@@ -1,8 +1,9 @@
-use chrono::{NaiveDate, Utc};
-use crate::database::entity::organizers::Organizers;
-use crate::database::init::get_pool;
-use crate::types::ResultWithStringError;
 use uuid::Uuid;
+use chrono::{NaiveDate, Utc};
+
+use crate::database::init::get_pool;
+use crate::database::entity::organizers::Organizers;
+use crate::types::ResultWithStringError;
 
 pub async fn get_organizers() -> ResultWithStringError<Vec<Organizers>> {
     let conn = get_pool().await;

@@ -1,6 +1,7 @@
+use sqlx::types::Uuid;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::{NaiveDate, NaiveDateTime};
-use sqlx::types::Uuid;
+
 use crate::types::custom_serde;
 
 #[derive(Serialize, Deserialize, Debug, Clone, sqlx::FromRow)]

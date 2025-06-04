@@ -1,9 +1,10 @@
 use chrono::Utc;
 use uuid::Uuid;
+use crate::database::init::get_pool;
+
 use crate::database::dto::commissions::ReportCommission;
 use crate::database::entity::commissions::Commissions;
 use crate::database::enums::commission_referral::CommissionDirection;
-use crate::database::init::get_pool;
 use crate::types::ResultWithStringError;
 
 pub async fn get_commissions() -> ResultWithStringError<Vec<Commissions>> {

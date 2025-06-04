@@ -1,6 +1,6 @@
+use sqlx::types::Uuid;
 use serde::{Deserialize, Serialize};
 use sqlx::types::chrono::NaiveDateTime;
-use sqlx::types::Uuid;
 
 #[derive(Serialize, Deserialize, Debug, Clone, sqlx::FromRow)]
 pub struct CommissionMembers {

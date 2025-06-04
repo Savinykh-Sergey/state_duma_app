@@ -1,6 +1,7 @@
 use uuid::Uuid;
-use crate::database::entity::members::Members;
+
 use crate::database::init::get_pool;
+use crate::database::entity::members::Members;
 use crate::types::ResultWithStringError;
 
 pub async fn get_chairmen() -> ResultWithStringError<Vec<Members>> {
@@ -12,9 +13,9 @@ pub async fn get_chairmen() -> ResultWithStringError<Vec<Members>> {
             WHERE is_chairman = true
             ORDER BY birthday
     "#)
-        .fetch_all(conn)
-        .await
-        .map_err(|e| format!("Ошибка запроса в базу данных: {}", e.to_string()))?;
+    .fetch_all(conn)
+    .await
+    .map_err(|e| format!("Ошибка запроса в базу данных: {}", e.to_string()))?;
 
     Ok(result)
 }
@@ -27,11 +28,10 @@ pub async fn delete_chairmen(id: Uuid) -> ResultWithStringError<()> {
         SET is_chairman = false
         WHERE id = $1
     "#)
-        .bind(id)
-        .execute(conn)
-        .await
-        .map_err(|e| format!("Ошибка запроса в базу данных: {}", e.to_string()))?;
+    .bind(id)
+    .execute(conn)
+    .await
+    .map_err(|e| format!("Ошибка запроса в базу данных: {}", e.to_string()))?;
 
     Ok(())
 }
-

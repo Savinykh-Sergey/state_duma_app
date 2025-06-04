@@ -1,6 +1,6 @@
+use std::env;
 use once_cell::sync::OnceCell;
 use sqlx::{postgres::PgPoolOptions, PgPool};
-use std::env;
 
 pub static STATE_DUMA_POOL: OnceCell<PgPool> = OnceCell::new();
 pub async fn init_pools() {
