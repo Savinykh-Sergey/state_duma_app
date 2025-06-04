@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "state_duma_app",
+  "productName": "state-duma-app",
   "version": "0.1.0",
-  "identifier": "com.state_duma_app.app",
+  "identifier": "com.state-duma-app.app",
   "build": {
     "frontendDist": "../src"
   },
@@ -10,8 +10,8 @@
     "withGlobalTauri": true,
     "windows": [
       {
-        "title": "state_duma_app",
-        "width": 1600,
+        "title": "state-duma-app",
+        "width": 1200,
         "height": 700
       }
     ],
